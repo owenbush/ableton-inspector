@@ -1,0 +1,25 @@
+{
+  "$schema": "Example configuration file for Ableton Inspector",
+  "samplePaths": {
+    "splice": [
+      "/Volumes/Music/Plugins/Splice/sounds/packs",
+      "C:\\Users\\YourName\\Documents\\Splice\\sounds\\packs",
+      "/home/user/Splice/sounds/packs"
+    ],
+    "custom": [
+      "/Volumes/Samples/My Library",
+      "C:\\Users\\YourName\\Music\\Samples"
+    ]
+  },
+  "output": {
+    "format": "text",
+    "colorize": true,
+    "verbose": false
+  },
+  "defaults": {
+    "extractTempo": true,
+    "extractScale": true,
+    "extractSamples": true
+  }
+}
+

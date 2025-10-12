@@ -1,0 +1,42 @@
+{
+  "name": "@owenbush/ableton-inspector-core",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Core library for extracting information from Ableton Live Set files",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "npm run build && node --test dist/test/extractors/*.test.js"
+  },
+  "keywords": [
+    "ableton",
+    "live",
+    "als",
+    "parser",
+    "extractor"
+  ],
+  "author": "Owen Bush <owen@obush.co.uk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/owenbush/ableton-inspector.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "typescript": "^5.3.3"
+  }
+}
+

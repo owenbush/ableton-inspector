@@ -1,0 +1,50 @@
+{
+  "name": "ableton-inspector-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Monorepo for Ableton Inspector - Extract information from Ableton Live Set files",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspace=@owenbush/ableton-inspector",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint packages/*/src/**/*.ts",
+    "lint:fix": "eslint packages/*/src/**/*.ts --fix",
+    "format": "prettier --write \"packages/*/src/**/*.ts\" \"packages/*/README.md\" \"README.md\"",
+    "format:check": "prettier --check \"packages/*/src/**/*.ts\" \"packages/*/README.md\" \"README.md\"",
+    "typecheck": "npm run build",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test",
+    "clean": "rm -rf packages/*/dist packages/*/node_modules node_modules"
+  },
+  "keywords": [
+    "ableton",
+    "live",
+    "als",
+    "music",
+    "audio",
+    "extract",
+    "inspector"
+  ],
+  "author": "Owen Bush <owen@obush.co.uk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/owenbush/ableton-inspector.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2",
+    "typescript": "^5.3.3"
+  }
+}
