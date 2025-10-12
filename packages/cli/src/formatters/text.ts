@@ -4,7 +4,7 @@
  */
 
 import chalk from 'chalk';
-import type { AbletonProject } from '@owenbush/ableton-inspector-core';
+import type { AbletonProject, Sample } from '@owenbush/ableton-inspector-core';
 
 export function formatResults(
   data: AbletonProject,
@@ -64,7 +64,7 @@ export function formatResults(
     if (showAll && data.samples.samples.length > 0) {
       output += color ? chalk.dim('\n  All Samples:\n') : '\n  All Samples:\n';
 
-      data.samples.samples.forEach(s => {
+      data.samples.samples.forEach((s: Sample) => {
         const marker = s.isSplice ? (color ? chalk.green('●') : '●') : color ? chalk.dim('○') : '○';
         output += `    ${marker} ${s.filename}`;
 
@@ -75,9 +75,9 @@ export function formatResults(
       });
     } else if (data.samples.spliceSamples > 0) {
       output += color ? chalk.dim('\n  Splice Sample List:\n') : '\n  Splice Sample List:\n';
-      const spliceSamples = data.samples.samples.filter(s => s.isSplice);
+      const spliceSamples = data.samples.samples.filter((s: Sample) => s.isSplice);
 
-      spliceSamples.forEach(s => {
+      spliceSamples.forEach((s: Sample) => {
         output += color ? `    ${chalk.green('•')} ${s.filename}` : `    • ${s.filename}`;
 
         if (s.packName) {
@@ -89,7 +89,7 @@ export function formatResults(
 
     if (data.samples.searchedPaths && data.samples.searchedPaths.length > 0) {
       output += color ? chalk.dim('\n  Custom Splice Paths:\n') : '\n  Custom Splice Paths:\n';
-      data.samples.searchedPaths.forEach(path => {
+      data.samples.searchedPaths.forEach((path: string) => {
         output += `    - ${path}\n`;
       });
     }

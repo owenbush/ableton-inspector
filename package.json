@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspace=@owenbush/ableton-inspector-core && npm run build --workspace=@owenbush/ableton-inspector",
+    "build:all": "npm run build --workspaces",
     "dev": "npm run dev --workspace=@owenbush/ableton-inspector",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint packages/*/src/**/*.ts",

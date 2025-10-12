@@ -3,6 +3,7 @@ dist
 *.xml
 *.als
 *.log
+*.d.ts
 coverage
 .DS_Store
 package-lock.json
