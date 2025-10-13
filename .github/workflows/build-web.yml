@@ -1,0 +1,46 @@
+name: Build Web App (Development)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/web/**'
+      - 'packages/core/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/web/**'
+      - 'packages/core/**'
+
+jobs:
+  build:
+    name: Build Web App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build core library
+        run: npm run build --workspace=@owenbush/ableton-inspector-core
+
+      - name: Build web application
+        run: npm run build --workspace=@owenbush/ableton-inspector-web
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-${{ github.sha }}
+          path: './packages/web/dist'
+          retention-days: 7

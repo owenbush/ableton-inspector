@@ -6,6 +6,12 @@ Extract tempo, scale, and sample information from Ableton Live Set (.als) files.
 [![CI](https://github.com/owenbush/ableton-inspector/workflows/CI/badge.svg)](https://github.com/owenbush/ableton-inspector/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🌐 Try It Online
+
+Visit the **[web app](https://ableton-inspector.online)** to analyze your .als files directly in your browser - no installation required! Your files are processed locally and never leave your device.
+
+> **Note**: The web app is deployed automatically when a new release is published. For the latest development version, use the CLI tool.
+
 ## Features
 
 - 🎵 **Tempo Extraction** - Get BPM and tempo automation changes
@@ -201,6 +207,14 @@ Ableton Live Set files (.als) are gzipped XML files. Ableton Inspector:
 
 ## Development
 
+This project is a monorepo containing three packages:
+
+- **[@owenbush/ableton-inspector-core](./packages/core/)** - Core extraction library (Node.js + Browser)
+- **[@owenbush/ableton-inspector](./packages/cli/)** - Command-line tool
+- **[@owenbush/ableton-inspector-web](./packages/web/)** - Web application
+
+### Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/owenbush/ableton-inspector.git
@@ -214,6 +228,25 @@ npm run build
 
 # Run tests
 npm test
+
+# Run CLI in dev mode
+npm run dev --workspace=@owenbush/ableton-inspector
+
+# Run web app in dev mode
+npm run dev --workspace=@owenbush/ableton-inspector-web
+```
+
+### Project Structure
+
+```
+ableton-inspector/
+├── packages/
+│   ├── core/        # Shared extraction logic
+│   ├── cli/         # Command-line interface
+│   └── web/         # Web application
+├── .github/
+│   └── workflows/   # CI/CD pipelines
+└── examples/        # Configuration examples
 ```
 
 ## Contributing
@@ -233,9 +266,11 @@ MIT © [Owen Bush](https://github.com/owenbush)
 
 ## Acknowledgments
 
-- Built with TypeScript and Commander.js
+- Built with TypeScript and Commander.js (CLI)
+- React, Vite, and Tailwind CSS (Web)
 - XML parsing by fast-xml-parser
 - Beautiful terminal output with Chalk and Ora
+- Browser decompression with pako
 
 ## Related Projects
 
@@ -244,11 +279,12 @@ MIT © [Owen Bush](https://github.com/owenbush)
 
 ## Roadmap
 
+- [x] Web interface
+- [x] Browser-based processing
 - [ ] Batch processing of multiple files
 - [ ] Track information extraction
 - [ ] MIDI clip analysis
 - [ ] Plugin list extraction
-- [ ] Web interface
 - [ ] Project comparison tool
 
 ---
