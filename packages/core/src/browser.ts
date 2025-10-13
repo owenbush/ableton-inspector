@@ -112,3 +112,4 @@ export class Inspector {
     return extractSamples(this.xmlRoot, options);
   }
 }
+

@@ -5,14 +5,10 @@
   "description": "Core library for extracting information from Ableton Live Set files",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
-  "browser": "dist/src/browser.js",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "node": "./dist/src/index.js",
-      "browser": "./dist/src/browser.js",
-      "import": "./dist/src/index.js",
-      "default": "./dist/src/index.js"
+      "import": "./dist/src/index.js"
     }
   },
   "scripts": {
