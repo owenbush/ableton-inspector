@@ -5,6 +5,13 @@
 
 import pako from 'pako';
 
+// Browser globals
+declare const TextDecoder: {
+  new (encoding?: string): {
+    decode(input: Uint8Array): string;
+  };
+};
+
 /**
  * Decompress an .als file buffer in the browser.
  *
@@ -28,4 +35,3 @@ export function readAlsBuffer(buffer: Uint8Array | ArrayBuffer): string {
     );
   }
 }
-

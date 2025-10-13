@@ -16,4 +16,3 @@ export interface ProcessingResult {
     fileSize: string;
   };
 }
-

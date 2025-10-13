@@ -59,6 +59,7 @@ The built files will be in `dist/` directory.
 This app is automatically deployed to GitHub Pages when a new release is published.
 
 ### Release Deployment
+
 1. Create a new release on GitHub
 2. GitHub Actions automatically:
    - Builds the core library
@@ -67,6 +68,7 @@ This app is automatically deployed to GitHub Pages when a new release is publish
 3. Site goes live at: https://ableton-inspector.online
 
 ### Development Builds
+
 - Development changes are built and tested on every push
 - Build artifacts are uploaded for testing
 - No automatic deployment (keeps production stable)
