@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Music, Hash, Disc, Github, Terminal, ArrowDown } from 'lucide-react';
+import { Music, Disc, Github, Terminal, ArrowDown } from 'lucide-react';
 import { FileUploader } from './components/FileUploader';
 import { ResultsDisplay } from './components/ResultsDisplay';
 import type { ProcessingResult, ExtractOptions } from './lib/types';
@@ -57,46 +57,88 @@ function App() {
             How can this help you?
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Use Case 1 */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Use Case 1 - Musical Analysis */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mb-4">
                 <Music className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
-                Check BPM
+                Musical Analysis
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Quickly find your project's tempo without opening Ableton. Perfect for
-                collaboration and archiving.
+                Get tempo, time signature, and musical key information instantly. Perfect for
+                collaboration, archiving, and project documentation.
               </p>
             </div>
 
-            {/* Use Case 2 */}
+            {/* Use Case 2 - Song Structure */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center mb-4">
-                <Hash className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                <span className="text-2xl">📍</span>
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
-                Find Key
+                Song Structure
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Identify the musical key of any track. Great for remixing and ensuring
-                harmonic compatibility.
+                Analyze arrangement markers and section lengths. See your song's structure
+                with durations (e.g., "Intro: 4 bars", "Verse: 16 bars").
               </p>
             </div>
 
-            {/* Use Case 3 */}
+            {/* Use Case 3 - Track Organization */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🎛️</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                Track Organization
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                See all your tracks organized by type (Audio, MIDI, Return, Master).
+                Perfect for understanding project complexity and structure.
+              </p>
+            </div>
+
+            {/* Use Case 4 - Sample Management */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
               <div className="w-14 h-14 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center mb-4">
                 <Disc className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
-                List Samples
+                Sample Management
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                See all samples and Splice packs used in your project. Perfect for organizing
-                and documentation.
+                List all samples and identify Splice packs used. Great for organizing
+                your sample library and tracking pack usage.
+              </p>
+            </div>
+
+            {/* Use Case 5 - Project Documentation */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-900 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">📋</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                Project Documentation
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Generate comprehensive project reports for clients, collaborators, or
+                your own reference. Export as JSON for further analysis.
+              </p>
+            </div>
+
+            {/* Use Case 6 - Quick Overview */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-pink-100 dark:bg-pink-900 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">⚡</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                Quick Overview
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Get a complete project summary without opening Ableton. Perfect for
+                quickly understanding any .als file's contents and structure.
               </p>
             </div>
           </div>

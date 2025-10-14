@@ -18,6 +18,9 @@ interface CLIOptions {
   tempo?: boolean;
   scale?: boolean;
   samples?: boolean;
+  locators?: boolean;
+  timeSignature?: boolean;
+  trackTypes?: boolean;
   spliceOnly?: boolean;
   showAllSamples?: boolean;
   splicePath?: string;
@@ -41,6 +44,9 @@ async function main() {
     .option('--tempo', 'Extract tempo information')
     .option('--scale', 'Extract scale information')
     .option('--samples', 'Extract sample information')
+    .option('--locators', 'Extract arrangement markers (locators)')
+    .option('--time-signature', 'Extract time signature information')
+    .option('--track-types', 'Extract track types and information')
     .option('--all', 'Extract all information (default)')
 
     // Sample options
@@ -81,10 +87,15 @@ async function inspect(file: string, options: CLIOptions) {
   ];
 
   // Determine what to extract
-  const extractAll = !options.tempo && !options.scale && !options.samples;
+  const extractAll = !options.tempo && !options.scale && !options.samples &&
+                     !options.locators && !options.timeSignature &&
+                     !options.trackTypes;
   const shouldExtractTempo = extractAll || options.tempo;
   const shouldExtractScale = extractAll || options.scale;
   const shouldExtractSamples = extractAll || options.samples;
+  const shouldExtractLocators = extractAll || options.locators;
+  const shouldExtractTimeSignature = extractAll || options.timeSignature;
+  const shouldExtractTrackTypes = extractAll || options.trackTypes;
 
   // Create spinner (unless quiet mode)
   const spinner = options.quiet ? null : ora('Loading project...').start();
@@ -117,6 +128,19 @@ async function inspect(file: string, options: CLIOptions) {
       };
       result.samples = inspector.extractSamples(sampleOptions);
     }
+
+    if (shouldExtractLocators) {
+      result.locators = inspector.extractLocators();
+    }
+
+    if (shouldExtractTimeSignature) {
+      result.timeSignature = inspector.extractTimeSignature();
+    }
+
+    if (shouldExtractTrackTypes) {
+      result.trackTypes = inspector.extractTrackTypes();
+    }
+
 
     if (spinner) spinner.succeed('Extraction complete');
 

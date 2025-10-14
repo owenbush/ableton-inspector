@@ -1,6 +1,6 @@
 # Ableton Inspector
 
-Extract tempo, scale, and sample information from Ableton Live Set (.als) files.
+Extract comprehensive information from Ableton Live Set (.als) files including tempo, time signature, musical key, samples, song structure, and track organization.
 
 [![npm version](https://img.shields.io/npm/v/@owenbush/ableton-inspector.svg)](https://www.npmjs.com/package/@owenbush/ableton-inspector)
 [![CI](https://github.com/owenbush/ableton-inspector/workflows/CI/badge.svg)](https://github.com/owenbush/ableton-inspector/actions)
@@ -12,11 +12,18 @@ Visit the **[web app](https://ableton-inspector.online)** to analyze your .als f
 
 > **Note**: The web app is deployed automatically when a new release is published. For the latest development version, use the CLI tool.
 
+### 🎨 Rich Social Media Sharing
+
+The web app includes optimized Open Graph and Twitter Card metadata for beautiful social media previews when sharing links. Perfect for showcasing your Ableton projects on social platforms!
+
 ## Features
 
 - 🎵 **Tempo Extraction** - Get BPM and tempo automation changes
+- 🎼 **Time Signature** - Extract time signature information and changes
 - 🎹 **Scale Detection** - Extract key and scale information
 - 🔊 **Sample Analysis** - List all samples with Splice detection
+- 📍 **Song Structure** - Analyze arrangement markers with section durations
+- 🎛️ **Track Organization** - See all tracks by type (Audio, MIDI, Return, Master)
 - 🎨 **Pretty Output** - Beautiful colored terminal output
 - 📦 **JSON Export** - Export data in JSON format
 - 🔧 **Custom Splice Paths** - Support for custom Splice folder locations
@@ -55,6 +62,10 @@ Output:
   Initial Tempo: 88 BPM
   No tempo automation
 
+🎼 TIME SIGNATURE
+  Initial: 4/4
+  No time signature changes
+
 🎹 SCALE
   Key: B Minor
 
@@ -65,6 +76,31 @@ Output:
   Splice Sample List:
     • sample1.wav (Pack Name)
     • sample2.wav (Pack Name)
+    ...
+
+📍 LOCATORS
+  Total Locators: 5
+
+  Arrangement Markers:
+    0:0 - Intro (4 bars)
+    4:0 - Verse (16 bars)
+    20:0 - Chorus (8 bars)
+    28:0 - Bridge (8 bars)
+    36:0 - Outro
+
+🎛️ TRACKS
+  Audio: 8
+  MIDI: 4
+  Return: 2
+  Master: 1
+  Total: 15
+
+  Track List:
+    🎵 Lead Vocal (audio)
+    🎵 Bass (audio)
+    🎹 Piano (midi)
+    🔄 Reverb (return)
+    🎚️ Master (master)
     ...
 ```
 
@@ -77,8 +113,17 @@ ableton-inspector "project.als" --tempo
 # Only scale
 ableton-inspector "project.als" --scale
 
-# Tempo and scale
-ableton-inspector "project.als" --tempo --scale
+# Song structure with locators
+ableton-inspector "project.als" --locators
+
+# Track organization
+ableton-inspector "project.als" --track-types
+
+# Time signature
+ableton-inspector "project.als" --time-signature
+
+# Multiple options
+ableton-inspector "project.als" --tempo --locators --track-types
 ```
 
 ### JSON output
@@ -102,12 +147,19 @@ ableton-inspector "project.als" --samples \
 ableton-inspector "project.als" --samples \
   --splice-paths "/path1/Splice,/path2/Splice,/path3/Splice"
 
-# Only show Splice samples
-ableton-inspector "project.als" --samples --splice-only
+# Show only Splice samples (default behavior)
+ableton-inspector "project.als" --samples
 
-# Show complete list of all samples (both Splice and non-Splice)
+# Show all samples (both Splice and non-Splice)
 ableton-inspector "project.als" --samples --show-all-samples
 ```
+
+### Sample Display Options
+
+The `--samples` option has two display modes:
+
+- **Default** (no flags): Shows only Splice samples with pack names
+- **`--show-all-samples`**: Show all samples with markers (● for Splice, ○ for others)
 
 ## Configuration File
 
@@ -144,8 +196,11 @@ Options:
 
 What to extract:
   --tempo                 Extract tempo information
+  --time-signature        Extract time signature information
   --scale                 Extract scale information
   --samples               Extract sample information
+  --locators              Extract arrangement markers (locators)
+  --track-types           Extract track types and information
   --all                   Extract everything (default)
 
 Sample options:
@@ -182,8 +237,11 @@ const inspector = await Inspector.fromFile('project.als');
 const data = inspector.extractAll();
 
 console.log(`Tempo: ${data.tempo.initialTempo} BPM`);
+console.log(`Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`);
 console.log(`Key: ${data.scale.uniqueScales[0].root} ${data.scale.uniqueScales[0].scale}`);
 console.log(`Samples: ${data.samples.totalSamples}`);
+console.log(`Locators: ${data.locators.totalLocators}`);
+console.log(`Tracks: ${data.trackTypes.summary.audio} audio, ${data.trackTypes.summary.midi} MIDI`);
 ```
 
 See the [core package README](./packages/core/README.md) for more details.
@@ -196,10 +254,14 @@ Ableton Live Set files (.als) are gzipped XML files. Ableton Inspector:
 2. Parses the XML structure
 3. Extracts specific information:
    - **Tempo**: From `MainTrack > AutomationEnvelopes` (tempo envelope with PointeeId=8)
+   - **Time Signature**: From `TimeSignature` elements and `RemoteableTimeSignature` data
    - **Scale**: From `ScaleInformation` elements throughout the project
    - **Samples**: From `FileRef` elements with `Path` attributes
+   - **Locators**: From `Locators > Locator` elements with time and name data
+   - **Track Types**: From `AudioTrack`, `MidiTrack`, `ReturnTrack`, and `PreHearTrack` elements
 4. Detects Splice samples by matching path patterns
-5. Formats and outputs the results
+5. Calculates section durations between consecutive locators
+6. Formats and outputs the results
 
 ## Requirements
 

@@ -16,8 +16,11 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
     tempo: true,
     scale: true,
     samples: true,
-    spliceOnly: false,
-    showAllSamples: false,
+    locators: true,
+    timeSignature: true,
+    trackTypes: true,
+    spliceOnly: false, // Default: show Splice samples only (recommended)
+    showAllSamples: false, // Default: don't show all samples
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +89,19 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
           splicePaths: options.customSplicePaths,
         });
       }
+
+      if (options.locators) {
+        result.locators = inspector.extractLocators();
+      }
+
+      if (options.timeSignature) {
+        result.timeSignature = inspector.extractTimeSignature();
+      }
+
+      if (options.trackTypes) {
+        result.trackTypes = inspector.extractTrackTypes();
+      }
+
 
       const processingTime = performance.now() - startTime;
 
@@ -221,40 +237,78 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={options.spliceOnly}
-              onChange={e => setOptions({ ...options, spliceOnly: e.target.checked })}
-              disabled={!options.samples}
-              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              checked={options.locators}
+              onChange={e => setOptions({ ...options, locators: e.target.checked })}
+              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span
-              className={
-                !options.samples
-                  ? 'text-gray-400 dark:text-gray-600'
-                  : 'text-gray-900 dark:text-white'
-              }
-            >
-              Splice samples only
-            </span>
+            <span className="text-gray-900 dark:text-white">Locators</span>
           </label>
 
-          <label className="flex items-center space-x-3 cursor-pointer col-span-2">
+          <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={options.showAllSamples}
-              onChange={e => setOptions({ ...options, showAllSamples: e.target.checked })}
-              disabled={!options.samples}
-              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              checked={options.timeSignature}
+              onChange={e => setOptions({ ...options, timeSignature: e.target.checked })}
+              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span
-              className={
-                !options.samples
-                  ? 'text-gray-400 dark:text-gray-600'
-                  : 'text-gray-900 dark:text-white'
-              }
-            >
-              Show all samples in list
-            </span>
+            <span className="text-gray-900 dark:text-white">Time Signature</span>
           </label>
+
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={options.trackTypes}
+              onChange={e => setOptions({ ...options, trackTypes: e.target.checked })}
+              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-gray-900 dark:text-white">Track Types</span>
+          </label>
+
+
+          {/* Sample Display Options */}
+          {options.samples && (
+            <div className="col-span-2 space-y-3 pl-6 border-l-2 border-gray-200 dark:border-gray-700">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Sample Display Options:
+              </p>
+
+              <div className="space-y-2">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="sampleDisplay"
+                    checked={!options.showAllSamples}
+                    onChange={() => setOptions({
+                      ...options,
+                      spliceOnly: false,
+                      showAllSamples: false
+                    })}
+                    className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-gray-900 dark:text-white">
+                    Show Splice samples only (recommended)
+                  </span>
+                </label>
+
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="sampleDisplay"
+                    checked={options.showAllSamples}
+                    onChange={() => setOptions({
+                      ...options,
+                      spliceOnly: false,
+                      showAllSamples: true
+                    })}
+                    className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-gray-900 dark:text-white">
+                    Show all samples (Splice + others)
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

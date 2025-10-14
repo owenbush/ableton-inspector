@@ -2,6 +2,9 @@ export interface ExtractOptions {
   tempo: boolean;
   scale: boolean;
   samples: boolean;
+  locators: boolean;
+  timeSignature: boolean;
+  trackTypes: boolean;
   spliceOnly: boolean;
   showAllSamples: boolean;
   customSplicePaths?: string[];

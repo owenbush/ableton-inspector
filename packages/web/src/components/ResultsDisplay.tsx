@@ -95,6 +95,51 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
           </motion.div>
         )}
 
+        {/* Time Signature */}
+        {data.timeSignature && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.15 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <span className="text-blue-600 dark:text-blue-400 text-lg">🎼</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Time Signature</h3>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                {data.timeSignature.initialTimeSignature.numerator}/{data.timeSignature.initialTimeSignature.denominator}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Initial Time Signature</p>
+            </div>
+
+            {data.timeSignature.hasChanges && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  Time Signature Changes:
+                </p>
+                {data.timeSignature.changes.map((change: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  >
+                    <span className="text-blue-600 dark:text-blue-400 font-mono text-sm">
+                      {formatTime(change.time)}
+                    </span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {change.numerator}/{change.denominator}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
         {/* Scale */}
         {data.scale && (
           <motion.div
@@ -202,6 +247,133 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
             )}
           </motion.div>
         )}
+
+        {/* Locators */}
+        {data.locators && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <span className="text-purple-600 dark:text-purple-400 text-lg">📍</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Locators</h3>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                {data.locators.totalLocators}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Arrangement Markers</p>
+            </div>
+
+            {data.locators.locators.length > 0 && (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  Song Structure:
+                </p>
+                {data.locators.locators.map((locator: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-purple-600 dark:text-purple-400 font-mono text-sm">
+                        {formatTime(locator.time)}
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {locator.name}
+                      </span>
+                      {locator.durationText && (
+                        <span className="text-xs text-purple-500 dark:text-purple-400 bg-purple-100 dark:bg-purple-900 px-2 py-1 rounded">
+                          {locator.durationText}
+                        </span>
+                      )}
+                    </div>
+                    {locator.annotation && (
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {locator.annotation}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+
+        {/* Track Types */}
+        {data.trackTypes && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                <span className="text-orange-600 dark:text-orange-400 text-lg">🎛️</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Tracks</h3>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {data.trackTypes.summary.audio}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Audio</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {data.trackTypes.summary.midi}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">MIDI</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {data.trackTypes.summary.return}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Return</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {data.trackTypes.summary.master}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Master</p>
+              </div>
+            </div>
+
+            {data.trackTypes.tracks.length > 0 && (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                  Track List:
+                </p>
+                {data.trackTypes.tracks.map((track: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  >
+                    <span className="text-lg">{getTrackIcon(track.type)}</span>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {track.userDefinedName || track.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                        {track.type}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
       </div>
 
       {/* Processing info */}
@@ -215,4 +387,21 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
     </motion.div>
   );
 }
+
+function formatTime(time: number): string {
+  const bars = Math.floor(time / 4);
+  const beats = Math.floor(time % 4);
+  return `${bars}:${beats}`;
+}
+
+function getTrackIcon(type: string): string {
+  const icons: Record<string, string> = {
+    'audio': '🎵',
+    'midi': '🎹',
+    'return': '🔄',
+    'master': '🎚️'
+  };
+  return icons[type] || '📀';
+}
+
 

@@ -1,6 +1,6 @@
 # @owenbush/ableton-inspector-core
 
-Core library for extracting information from Ableton Live Set (.als) files.
+Core library for extracting comprehensive information from Ableton Live Set (.als) files including tempo, time signature, musical key, samples, song structure, and track organization.
 
 ## Installation
 
@@ -20,9 +20,12 @@ const inspector = await Inspector.fromFile('project.als');
 const data = inspector.extractAll();
 
 console.log(`Tempo: ${data.tempo.initialTempo} BPM`);
+console.log(`Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`);
 console.log(`Key: ${data.scale.uniqueScales[0].root} ${data.scale.uniqueScales[0].scale}`);
 console.log(`Total Samples: ${data.samples.totalSamples}`);
 console.log(`Splice Samples: ${data.samples.spliceSamples}`);
+console.log(`Locators: ${data.locators.totalLocators}`);
+console.log(`Tracks: ${data.trackTypes.summary.audio} audio, ${data.trackTypes.summary.midi} MIDI`);
 ```
 
 ## Extract Specific Information
@@ -32,9 +35,24 @@ console.log(`Splice Samples: ${data.samples.spliceSamples}`);
 const tempo = inspector.extractTempo();
 console.log(`BPM: ${tempo.initialTempo}`);
 
+// Only time signature
+const timeSignature = inspector.extractTimeSignature();
+console.log(`Time Signature: ${timeSignature.initialTimeSignature.numerator}/${timeSignature.initialTimeSignature.denominator}`);
+
 // Only scale
 const scale = inspector.extractScale();
 console.log(`Key: ${scale.uniqueScales[0].root} ${scale.uniqueScales[0].scale}`);
+
+// Only locators (song structure)
+const locators = inspector.extractLocators();
+console.log(`Locators: ${locators.totalLocators}`);
+locators.locators.forEach(locator => {
+  console.log(`${locator.name}: ${locator.durationText || 'end'}`);
+});
+
+// Only track types
+const trackTypes = inspector.extractTrackTypes();
+console.log(`Audio: ${trackTypes.summary.audio}, MIDI: ${trackTypes.summary.midi}`);
 
 // Only samples
 const samples = inspector.extractSamples({

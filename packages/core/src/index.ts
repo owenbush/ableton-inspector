@@ -20,6 +20,9 @@ export { parseXml, findAllElements, getNestedValue } from './utils/xml-parser.js
 export { extractTempo } from './extractors/tempo.js';
 export { extractScale } from './extractors/scale.js';
 export { extractSamples } from './extractors/samples.js';
+export { extractLocators } from './extractors/locators.js';
+export { extractTimeSignature } from './extractors/time-signature.js';
+export { extractTrackTypes } from './extractors/track-types.js';
 
 /**
  * Main Inspector class for convenient usage.
@@ -30,6 +33,9 @@ import { parseXml } from './utils/xml-parser.js';
 import { extractTempo } from './extractors/tempo.js';
 import { extractScale } from './extractors/scale.js';
 import { extractSamples } from './extractors/samples.js';
+import { extractLocators } from './extractors/locators.js';
+import { extractTimeSignature } from './extractors/time-signature.js';
+import { extractTrackTypes } from './extractors/track-types.js';
 import type { AbletonProject, SampleOptions } from './types/index.js';
 
 export class Inspector {
@@ -103,4 +109,26 @@ export class Inspector {
   extractSamples(options?: SampleOptions) {
     return extractSamples(this.xmlRoot, options);
   }
+
+  /**
+   * Extract locators (arrangement markers).
+   */
+  extractLocators() {
+    return extractLocators(this.xmlRoot);
+  }
+
+  /**
+   * Extract time signature information.
+   */
+  extractTimeSignature() {
+    return extractTimeSignature(this.xmlRoot);
+  }
+
+  /**
+   * Extract track types and information.
+   */
+  extractTrackTypes() {
+    return extractTrackTypes(this.xmlRoot);
+  }
+
 }

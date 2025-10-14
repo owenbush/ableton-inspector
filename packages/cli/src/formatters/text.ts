@@ -4,7 +4,7 @@
  */
 
 import chalk from 'chalk';
-import type { AbletonProject, Sample } from '@owenbush/ableton-inspector-core';
+import type { AbletonProject, Sample, Locator, Track } from '@owenbush/ableton-inspector-core';
 
 export function formatResults(
   data: AbletonProject,
@@ -95,6 +95,94 @@ export function formatResults(
     }
   }
 
+  // Locators
+  if (data.locators) {
+    output += color ? chalk.bold('\n📍 LOCATORS\n') : '\nLOCATORS\n';
+    output += `  Total Locators: ${color ? chalk.cyan(data.locators.totalLocators) : data.locators.totalLocators}\n`;
+
+    if (data.locators.locators.length > 0) {
+      output += color ? chalk.dim('\n  Arrangement Markers:\n') : '\n  Arrangement Markers:\n';
+              data.locators.locators.forEach((locator: Locator) => {
+                const timeStr = formatTime(locator.time);
+                const durationStr = locator.durationText ? ` (${locator.durationText})` : '';
+                output += color
+                  ? `    ${chalk.cyan(timeStr)} - ${chalk.bold(locator.name)}${durationStr}${locator.annotation ? chalk.dim(` (${locator.annotation})`) : ''}\n`
+                  : `    ${timeStr} - ${locator.name}${durationStr}${locator.annotation ? ` (${locator.annotation})` : ''}\n`;
+              });
+    }
+  }
+
+  // Time Signature
+  if (data.timeSignature) {
+    output += color ? chalk.bold('\n🎼 TIME SIGNATURE\n') : '\nTIME SIGNATURE\n';
+    const ts = data.timeSignature.initialTimeSignature;
+    output += color
+      ? `  Initial: ${chalk.cyan(ts.numerator + '/' + ts.denominator)}\n`
+      : `  Initial: ${ts.numerator}/${ts.denominator}\n`;
+
+    if (data.timeSignature.hasChanges) {
+      output += `  Changes: ${data.timeSignature.changes.length}\n`;
+      data.timeSignature.changes.forEach(change => {
+        const timeStr = formatTime(change.time);
+        output += color
+          ? `    ${chalk.cyan(timeStr)}: ${change.numerator}/${change.denominator}\n`
+          : `    ${timeStr}: ${change.numerator}/${change.denominator}\n`;
+      });
+    } else {
+      output += color ? chalk.dim('  No time signature changes\n') : '  No time signature changes\n';
+    }
+  }
+
+  // Track Types
+  if (data.trackTypes) {
+    output += color ? chalk.bold('\n🎛️  TRACKS\n') : '\nTRACKS\n';
+    const summary = data.trackTypes.summary;
+    output += `  Audio: ${color ? chalk.cyan(summary.audio) : summary.audio}\n`;
+    output += `  MIDI: ${color ? chalk.cyan(summary.midi) : summary.midi}\n`;
+    output += `  Return: ${color ? chalk.cyan(summary.return) : summary.return}\n`;
+    output += `  Master: ${color ? chalk.cyan(summary.master) : summary.master}\n`;
+    output += `  Total: ${color ? chalk.bold.cyan(summary.total) : summary.total}\n`;
+
+    if (data.trackTypes.tracks.length > 0) {
+      output += color ? chalk.dim('\n  Track List:\n') : '\n  Track List:\n';
+      data.trackTypes.tracks.forEach((track: Track) => {
+        const typeIcon = getTrackIcon(track.type);
+        const name = track.userDefinedName || track.name;
+        output += color
+          ? `    ${typeIcon} ${chalk.bold(name)} (${chalk.dim(track.type)})\n`
+          : `    ${typeIcon} ${name} (${track.type})\n`;
+      });
+    }
+  }
+
+
   output += '\n';
   return output;
+}
+
+function formatTime(time: number): string {
+  const bars = Math.floor(time / 4);
+  const beats = Math.floor(time % 4);
+  return `${bars}:${beats}`;
+}
+
+function getTrackIcon(type: string): string {
+  const icons: Record<string, string> = {
+    'audio': '🎵',
+    'midi': '🎹',
+    'return': '🔄',
+    'master': '🎚️'
+  };
+  return icons[type] || '📀';
+}
+
+function getDeviceIcon(type: string): string {
+  const icons: Record<string, string> = {
+    'native': '🔧',
+    'vst': '🔌',
+    'au': '🍎',
+    'max': '⚡',
+    'unknown': '❓'
+  };
+  return icons[type] || '❓';
 }
