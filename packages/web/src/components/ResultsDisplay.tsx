@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Download, Copy, Music, Hash, Disc, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { ProcessingResult } from '../lib/types';
-import type { TimeSignatureChange, Sample, Track } from '@owenbush/ableton-inspector-core';
+import type { TimeSignatureChange, Sample, Track, Locator } from '@owenbush/ableton-inspector-core';
 
 interface ResultsDisplayProps {
   result: ProcessingResult;
@@ -276,7 +276,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Song Structure:
                 </p>
-                {data.locators.locators.map((locator: Record<string, unknown>, idx: number) => (
+                {data.locators.locators.map((locator: Locator, idx: number) => (
                   <div
                     key={idx}
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"

@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, Loader2, AlertCircle, CheckCircle, Settings, Plus, X } from 'lucide-react';
 // Import from browser entry point
 import { Inspector } from '@owenbush/ableton-inspector-core/dist/src/browser.js';
+import type { AbletonProject } from '@owenbush/ableton-inspector-core';
 import type { ExtractOptions, ProcessingResult } from '../lib/types';
 
 interface FileUploaderProps {
@@ -73,7 +74,7 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
       const inspector = await Inspector.fromFile(selectedFile);
 
       // Extract based on options
-      const result: Record<string, unknown> = { file: selectedFile.name };
+      const result: AbletonProject = { file: selectedFile.name };
 
       if (options.tempo) {
         result.tempo = inspector.extractTempo();

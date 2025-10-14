@@ -1,3 +1,5 @@
+import type { AbletonProject } from '@owenbush/ableton-inspector-core';
+
 export interface ExtractOptions {
   tempo: boolean;
   scale: boolean;
@@ -12,7 +14,7 @@ export interface ExtractOptions {
 
 export interface ProcessingResult {
   success: boolean;
-  data?: Record<string, unknown>;
+  data?: AbletonProject;
   error?: string;
   meta?: {
     processingTime: number;
