@@ -12,7 +12,7 @@ export interface ExtractOptions {
 
 export interface ProcessingResult {
   success: boolean;
-  data?: any;
+  data?: Record<string, unknown>;
   error?: string;
   meta?: {
     processingTime: number;

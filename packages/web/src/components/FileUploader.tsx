@@ -73,7 +73,7 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
       const inspector = await Inspector.fromFile(selectedFile);
 
       // Extract based on options
-      const result: any = { file: selectedFile.name };
+      const result: Record<string, unknown> = { file: selectedFile.name };
 
       if (options.tempo) {
         result.tempo = inspector.extractTempo();
@@ -120,11 +120,12 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
 
       // Auto-hide success state after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to process file');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to process file';
+      setError(errorMessage);
       onResult({
         success: false,
-        error: err.message || 'Failed to process file',
+        error: errorMessage,
       });
     } finally {
       setLoading(false);

@@ -24,7 +24,7 @@ export function extractLocators(xmlRoot: any): LocatorsData {
   if (!locatorsSection) {
     return {
       locators: [],
-      totalLocators: 0
+      totalLocators: 0,
     };
   }
 
@@ -33,7 +33,7 @@ export function extractLocators(xmlRoot: any): LocatorsData {
   if (!locatorArray) {
     return {
       locators: [],
-      totalLocators: 0
+      totalLocators: 0,
     };
   }
 
@@ -53,7 +53,7 @@ export function extractLocators(xmlRoot: any): LocatorsData {
           time: Number(time),
           name: String(name),
           annotation: String(annotation || ''),
-          isSongStart: Boolean(isSongStart)
+          isSongStart: Boolean(isSongStart),
         });
       }
     }
@@ -78,7 +78,7 @@ export function extractLocators(xmlRoot: any): LocatorsData {
 
   return {
     locators,
-    totalLocators: locators.length
+    totalLocators: locators.length,
   };
 }
 

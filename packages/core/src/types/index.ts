@@ -104,4 +104,3 @@ export interface Track {
   color: number;
   annotation: string;
 }
-

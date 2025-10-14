@@ -237,7 +237,9 @@ const inspector = await Inspector.fromFile('project.als');
 const data = inspector.extractAll();
 
 console.log(`Tempo: ${data.tempo.initialTempo} BPM`);
-console.log(`Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`);
+console.log(
+  `Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`
+);
 console.log(`Key: ${data.scale.uniqueScales[0].root} ${data.scale.uniqueScales[0].scale}`);
 console.log(`Samples: ${data.samples.totalSamples}`);
 console.log(`Locators: ${data.locators.totalLocators}`);

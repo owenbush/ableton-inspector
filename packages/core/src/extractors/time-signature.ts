@@ -25,7 +25,7 @@ export function extractTimeSignature(xmlRoot: any): TimeSignatureData {
     return {
       initialTimeSignature: { numerator: 4, denominator: 4 },
       changes: [],
-      hasChanges: false
+      hasChanges: false,
     };
   }
 
@@ -55,7 +55,7 @@ export function extractTimeSignature(xmlRoot: any): TimeSignatureData {
                 changes.push({
                   time,
                   numerator,
-                  denominator
+                  denominator,
                 });
               }
             }
@@ -75,18 +75,28 @@ export function extractTimeSignature(xmlRoot: any): TimeSignatureData {
   searchForTimeSignatures(timeSignatureSections);
 
   // Remove duplicates and sort by time
-  const uniqueChanges = changes.filter((change, index, self) =>
-    index === self.findIndex(c => c.time === change.time && c.numerator === change.numerator && c.denominator === change.denominator)
-  ).sort((a, b) => a.time - b.time);
+  const uniqueChanges = changes
+    .filter(
+      (change, index, self) =>
+        index ===
+        self.findIndex(
+          c =>
+            c.time === change.time &&
+            c.numerator === change.numerator &&
+            c.denominator === change.denominator
+        )
+    )
+    .sort((a, b) => a.time - b.time);
 
   // Get initial time signature (first one or default to 4/4)
-  const initialTimeSignature = uniqueChanges.length > 0 && uniqueChanges[0].time === 0
-    ? { numerator: uniqueChanges[0].numerator, denominator: uniqueChanges[0].denominator }
-    : { numerator: 4, denominator: 4 };
+  const initialTimeSignature =
+    uniqueChanges.length > 0 && uniqueChanges[0].time === 0
+      ? { numerator: uniqueChanges[0].numerator, denominator: uniqueChanges[0].denominator }
+      : { numerator: 4, denominator: 4 };
 
   return {
     initialTimeSignature,
     changes: uniqueChanges,
-    hasChanges: uniqueChanges.length > 0
+    hasChanges: uniqueChanges.length > 0,
   };
 }

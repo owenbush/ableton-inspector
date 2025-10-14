@@ -102,13 +102,13 @@ export function formatResults(
 
     if (data.locators.locators.length > 0) {
       output += color ? chalk.dim('\n  Arrangement Markers:\n') : '\n  Arrangement Markers:\n';
-              data.locators.locators.forEach((locator: Locator) => {
-                const timeStr = formatTime(locator.time);
-                const durationStr = locator.durationText ? ` (${locator.durationText})` : '';
-                output += color
-                  ? `    ${chalk.cyan(timeStr)} - ${chalk.bold(locator.name)}${durationStr}${locator.annotation ? chalk.dim(` (${locator.annotation})`) : ''}\n`
-                  : `    ${timeStr} - ${locator.name}${durationStr}${locator.annotation ? ` (${locator.annotation})` : ''}\n`;
-              });
+      data.locators.locators.forEach((locator: Locator) => {
+        const timeStr = formatTime(locator.time);
+        const durationStr = locator.durationText ? ` (${locator.durationText})` : '';
+        output += color
+          ? `    ${chalk.cyan(timeStr)} - ${chalk.bold(locator.name)}${durationStr}${locator.annotation ? chalk.dim(` (${locator.annotation})`) : ''}\n`
+          : `    ${timeStr} - ${locator.name}${durationStr}${locator.annotation ? ` (${locator.annotation})` : ''}\n`;
+      });
     }
   }
 
@@ -129,7 +129,9 @@ export function formatResults(
           : `    ${timeStr}: ${change.numerator}/${change.denominator}\n`;
       });
     } else {
-      output += color ? chalk.dim('  No time signature changes\n') : '  No time signature changes\n';
+      output += color
+        ? chalk.dim('  No time signature changes\n')
+        : '  No time signature changes\n';
     }
   }
 
@@ -155,7 +157,6 @@ export function formatResults(
     }
   }
 
-
   output += '\n';
   return output;
 }
@@ -168,21 +169,10 @@ function formatTime(time: number): string {
 
 function getTrackIcon(type: string): string {
   const icons: Record<string, string> = {
-    'audio': '🎵',
-    'midi': '🎹',
-    'return': '🔄',
-    'master': '🎚️'
+    audio: '🎵',
+    midi: '🎹',
+    return: '🔄',
+    master: '🎚️',
   };
   return icons[type] || '📀';
-}
-
-function getDeviceIcon(type: string): string {
-  const icons: Record<string, string> = {
-    'native': '🔧',
-    'vst': '🔌',
-    'au': '🍎',
-    'max': '⚡',
-    'unknown': '❓'
-  };
-  return icons[type] || '❓';
 }

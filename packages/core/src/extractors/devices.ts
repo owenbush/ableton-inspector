@@ -42,7 +42,7 @@ export function extractDevices(xmlRoot: any): DevicesData {
         'InstrumentRackDevice',
         'MaxAudioEffectDevice',
         'MaxMidiEffectDevice',
-        'MaxInstrumentDevice'
+        'MaxInstrumentDevice',
       ];
 
       for (const deviceType of deviceTypes) {
@@ -72,8 +72,9 @@ export function extractDevices(xmlRoot: any): DevicesData {
   searchForDevices(xmlRoot);
 
   // Remove duplicates based on ID and name
-  const uniqueDevices = devices.filter((device, index, self) =>
-    index === self.findIndex(d => d.id === device.id && d.name === device.name)
+  const uniqueDevices = devices.filter(
+    (device, index, self) =>
+      index === self.findIndex(d => d.id === device.id && d.name === device.name)
   );
 
   // Calculate summary
@@ -82,12 +83,12 @@ export function extractDevices(xmlRoot: any): DevicesData {
     vst: uniqueDevices.filter(d => d.type === 'vst').length,
     au: uniqueDevices.filter(d => d.type === 'au').length,
     max: uniqueDevices.filter(d => d.type === 'max').length,
-    total: uniqueDevices.length
+    total: uniqueDevices.length,
   };
 
   return {
     devices: uniqueDevices,
-    summary
+    summary,
   };
 }
 
@@ -146,7 +147,7 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
       'PlugName.@_Value',
       'PluginDesc.VstPluginInfo.PlugName.@_Value',
       'PluginDesc.AuPluginInfo.PlugName.@_Value',
-      'PluginDesc.MaxDeviceInfo.PlugName.@_Value'
+      'PluginDesc.MaxDeviceInfo.PlugName.@_Value',
     ];
 
     for (const namePath of namePaths) {
@@ -204,23 +205,23 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     type,
     category,
     manufacturer: manufacturer || undefined,
-    isExpanded
+    isExpanded,
   };
 }
 
 function getDeviceCategory(deviceType: string): string {
   const categories: Record<string, string> = {
-    'PluginDevice': 'Plugin',
-    'MidiDevice': 'MIDI Device',
-    'AudioEffectGroupDevice': 'Audio Effect Group',
-    'AudioEffectRackDevice': 'Audio Effect Rack',
-    'MidiEffectGroupDevice': 'MIDI Effect Group',
-    'MidiEffectRackDevice': 'MIDI Effect Rack',
-    'InstrumentGroupDevice': 'Instrument Group',
-    'InstrumentRackDevice': 'Instrument Rack',
-    'MaxAudioEffectDevice': 'Max Audio Effect',
-    'MaxMidiEffectDevice': 'Max MIDI Effect',
-    'MaxInstrumentDevice': 'Max Instrument'
+    PluginDevice: 'Plugin',
+    MidiDevice: 'MIDI Device',
+    AudioEffectGroupDevice: 'Audio Effect Group',
+    AudioEffectRackDevice: 'Audio Effect Rack',
+    MidiEffectGroupDevice: 'MIDI Effect Group',
+    MidiEffectRackDevice: 'MIDI Effect Rack',
+    InstrumentGroupDevice: 'Instrument Group',
+    InstrumentRackDevice: 'Instrument Rack',
+    MaxAudioEffectDevice: 'Max Audio Effect',
+    MaxMidiEffectDevice: 'Max MIDI Effect',
+    MaxInstrumentDevice: 'Max Instrument',
   };
 
   return categories[deviceType] || 'Unknown Device';

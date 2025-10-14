@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Download, Copy, Music, Hash, Disc, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { ProcessingResult } from '../lib/types';
+import type { TimeSignatureChange, Sample, Track } from '@owenbush/ableton-inspector-core';
 
 interface ResultsDisplayProps {
   result: ProcessingResult;
@@ -122,7 +123,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Time Signature Changes:
                 </p>
-                {data.timeSignature.changes.map((change: any, idx: number) => (
+                {data.timeSignature.changes.map((change: TimeSignatureChange, idx: number) => (
                   <div
                     key={idx}
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
@@ -217,8 +218,8 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                 </p>
                 {(options.showAllSamples
                   ? data.samples.samples
-                  : data.samples.samples.filter((s: any) => s.isSplice)
-                ).map((sample: any, idx: number) => (
+                  : data.samples.samples.filter((s: Sample) => s.isSplice)
+                ).map((sample: Sample, idx: number) => (
                   <div
                     key={idx}
                     className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -275,7 +276,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Song Structure:
                 </p>
-                {data.locators.locators.map((locator: any, idx: number) => (
+                {data.locators.locators.map((locator: Record<string, unknown>, idx: number) => (
                   <div
                     key={idx}
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
@@ -353,7 +354,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Track List:
                 </p>
-                {data.trackTypes.tracks.map((track: any, idx: number) => (
+                {data.trackTypes.tracks.map((track: Track, idx: number) => (
                   <div
                     key={idx}
                     className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"

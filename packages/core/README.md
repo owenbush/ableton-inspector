@@ -20,7 +20,9 @@ const inspector = await Inspector.fromFile('project.als');
 const data = inspector.extractAll();
 
 console.log(`Tempo: ${data.tempo.initialTempo} BPM`);
-console.log(`Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`);
+console.log(
+  `Time Signature: ${data.timeSignature.initialTimeSignature.numerator}/${data.timeSignature.initialTimeSignature.denominator}`
+);
 console.log(`Key: ${data.scale.uniqueScales[0].root} ${data.scale.uniqueScales[0].scale}`);
 console.log(`Total Samples: ${data.samples.totalSamples}`);
 console.log(`Splice Samples: ${data.samples.spliceSamples}`);
@@ -37,7 +39,9 @@ console.log(`BPM: ${tempo.initialTempo}`);
 
 // Only time signature
 const timeSignature = inspector.extractTimeSignature();
-console.log(`Time Signature: ${timeSignature.initialTimeSignature.numerator}/${timeSignature.initialTimeSignature.denominator}`);
+console.log(
+  `Time Signature: ${timeSignature.initialTimeSignature.numerator}/${timeSignature.initialTimeSignature.denominator}`
+);
 
 // Only scale
 const scale = inspector.extractScale();

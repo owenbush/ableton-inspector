@@ -130,5 +130,4 @@ export class Inspector {
   extractTrackTypes() {
     return extractTrackTypes(this.xmlRoot);
   }
-
 }

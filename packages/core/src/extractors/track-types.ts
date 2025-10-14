@@ -35,7 +35,7 @@ export function extractTrackTypes(xmlRoot: any): TrackTypesData {
           name: getNestedValue(track, 'Name.EffectiveName.@_Value') || '',
           userDefinedName: getNestedValue(track, 'Name.UserName.@_Value') || '',
           color: Number(getNestedValue(track, 'Color.@_Value') || 0),
-          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || ''
+          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || '',
         });
       }
     }
@@ -53,7 +53,7 @@ export function extractTrackTypes(xmlRoot: any): TrackTypesData {
           name: getNestedValue(track, 'Name.EffectiveName.@_Value') || '',
           userDefinedName: getNestedValue(track, 'Name.UserName.@_Value') || '',
           color: Number(getNestedValue(track, 'Color.@_Value') || 0),
-          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || ''
+          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || '',
         });
       }
     }
@@ -71,7 +71,7 @@ export function extractTrackTypes(xmlRoot: any): TrackTypesData {
           name: getNestedValue(track, 'Name.EffectiveName.@_Value') || '',
           userDefinedName: getNestedValue(track, 'Name.UserName.@_Value') || '',
           color: Number(getNestedValue(track, 'Color.@_Value') || 0),
-          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || ''
+          annotation: getNestedValue(track, 'Name.Annotation.@_Value') || '',
         });
       }
     }
@@ -88,7 +88,7 @@ export function extractTrackTypes(xmlRoot: any): TrackTypesData {
         name: masterName,
         userDefinedName: getNestedValue(preHearTrack, 'Name.UserName.@_Value') || '',
         color: Number(getNestedValue(preHearTrack, 'Color.@_Value') || 0),
-        annotation: getNestedValue(preHearTrack, 'Name.Annotation.@_Value') || ''
+        annotation: getNestedValue(preHearTrack, 'Name.Annotation.@_Value') || '',
       });
     }
   }
@@ -99,11 +99,11 @@ export function extractTrackTypes(xmlRoot: any): TrackTypesData {
     midi: tracks.filter(t => t.type === 'midi').length,
     return: tracks.filter(t => t.type === 'return').length,
     master: tracks.filter(t => t.type === 'master').length,
-    total: tracks.length
+    total: tracks.length,
   };
 
   return {
     tracks,
-    summary
+    summary,
   };
 }

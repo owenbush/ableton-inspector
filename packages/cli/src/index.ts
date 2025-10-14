@@ -87,9 +87,13 @@ async function inspect(file: string, options: CLIOptions) {
   ];
 
   // Determine what to extract
-  const extractAll = !options.tempo && !options.scale && !options.samples &&
-                     !options.locators && !options.timeSignature &&
-                     !options.trackTypes;
+  const extractAll =
+    !options.tempo &&
+    !options.scale &&
+    !options.samples &&
+    !options.locators &&
+    !options.timeSignature &&
+    !options.trackTypes;
   const shouldExtractTempo = extractAll || options.tempo;
   const shouldExtractScale = extractAll || options.scale;
   const shouldExtractSamples = extractAll || options.samples;
@@ -140,7 +144,6 @@ async function inspect(file: string, options: CLIOptions) {
     if (shouldExtractTrackTypes) {
       result.trackTypes = inspector.extractTrackTypes();
     }
-
 
     if (spinner) spinner.succeed('Extraction complete');
 
