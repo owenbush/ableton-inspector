@@ -14,10 +14,42 @@ import { getNestedValue } from '../utils/xml-parser.js';
  */
 export function extractTempo(xmlRoot: any): TempoInfo {
   // Navigate to MainTrack > AutomationEnvelopes
-  const mainTrack = getNestedValue(xmlRoot, 'Ableton.LiveSet.MainTrack');
+  // Try different paths for different Ableton versions
+  let mainTrack = getNestedValue(xmlRoot, 'Ableton.LiveSet.MainTrack');
+
+  // Fallback for older Ableton versions (Live 11 and earlier)
+  if (!mainTrack) {
+    mainTrack = getNestedValue(xmlRoot, 'Ableton.LiveSet.MasterTrack');
+  }
+
+  // Another fallback - look for any track with automation envelopes
+  if (!mainTrack) {
+    const tracks = getNestedValue(xmlRoot, 'Ableton.LiveSet.Tracks');
+    if (tracks) {
+      // Look through all tracks to find one with automation envelopes
+      const trackTypes = ['AudioTrack', 'MidiTrack', 'ReturnTrack'];
+      for (const trackType of trackTypes) {
+        const trackArray = getNestedValue(tracks, trackType);
+        if (trackArray) {
+          const tracksList = Array.isArray(trackArray) ? trackArray : [trackArray];
+          for (const track of tracksList) {
+            if (getNestedValue(track, 'AutomationEnvelopes')) {
+              mainTrack = track;
+              break;
+            }
+          }
+          if (mainTrack) break;
+        }
+      }
+    }
+  }
 
   if (!mainTrack) {
-    throw new Error('No MainTrack found in the Ableton Live Set');
+    // Return default tempo instead of throwing error for older files
+    return {
+      initialTempo: 120,
+      tempoChanges: [],
+    };
   }
 
   const envelopes = getNestedValue(mainTrack, 'AutomationEnvelopes.Envelopes.AutomationEnvelope');
@@ -83,6 +115,6 @@ function findInitialTempo(changes: TempoChange[]): number {
 function parseTempoChanges(events: any[]): TempoChange[] {
   return events.map(e => ({
     time: parseFloat(e['@_Time'] || '0'),
-    bpm: parseFloat(e['@_Value'] || '120'),
+    bpm: Math.round(parseFloat(e['@_Value'] || '120') * 100) / 100, // Round to 2 decimal places
   }));
 }

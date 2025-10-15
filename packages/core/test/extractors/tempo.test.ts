@@ -27,4 +27,14 @@ describe('Tempo Extractor', () => {
     assert.ok(Array.isArray(tempo.tempoChanges), 'Should have tempoChanges array');
     assert.strictEqual(tempo.tempoChanges.length, 1, 'Should have 1 tempo value');
   });
+
+  test('should extract tempo from Fascination project (Live 11)', async () => {
+    const alsPath = join(process.cwd(), 'test/fixtures', 'Fascination.als');
+    const inspector = await Inspector.fromFile(alsPath);
+    const tempo = inspector.extractTempo();
+
+    assert.strictEqual(tempo.initialTempo, 93, 'Initial tempo should be 93 BPM');
+    assert.ok(Array.isArray(tempo.tempoChanges), 'Should have tempoChanges array');
+    assert.strictEqual(tempo.tempoChanges.length, 1, 'Should have 1 tempo value');
+  });
 });

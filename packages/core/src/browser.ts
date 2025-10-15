@@ -92,6 +92,9 @@ export class Inspector {
       tempo: this.extractTempo(),
       scale: this.extractScale(),
       samples: this.extractSamples(sampleOptions),
+      locators: this.extractLocators(),
+      timeSignature: this.extractTimeSignature(),
+      trackTypes: this.extractTrackTypes(),
     };
   }
 

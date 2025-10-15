@@ -93,4 +93,20 @@ describe('Sample Extractor', () => {
     const allAreSplice = samples.samples.every(s => s.isSplice);
     assert.ok(allAreSplice, 'All returned samples should be Splice samples');
   });
+
+  test('should extract samples from Fascination project (Live 11)', async () => {
+    const alsPath = join(process.cwd(), 'test/fixtures', 'Fascination.als');
+    const inspector = await Inspector.fromFile(alsPath);
+    const samples = inspector.extractSamples();
+
+    assert.ok(samples, 'Should return sample info');
+    assert.strictEqual(samples.totalSamples, 5, 'Should have 5 total samples');
+    assert.strictEqual(samples.spliceSamples, 1, 'Should have 1 Splice sample');
+    assert.ok(Array.isArray(samples.samples), 'Should have samples array');
+
+    // Check that the Splice sample is correctly identified
+    const spliceSamples = samples.samples.filter(s => s.isSplice);
+    assert.strictEqual(spliceSamples.length, 1, 'Should have exactly 1 Splice sample');
+    assert.ok(spliceSamples[0].packName, 'Splice sample should have a pack name');
+  });
 });
