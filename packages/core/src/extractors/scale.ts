@@ -46,9 +46,8 @@ export function extractScale(xmlRoot: any): ScaleInfo {
 function parseScaleElement(element: any): Scale | null {
   // Handle both newer format (Root) and older format (RootNote)
   const rootValue = parseInt(
-    element.Root?.['@_Value'] ??
-    element.RootNote?.['@_Value'] ??
-    '-1', 10
+    element.Root?.['@_Value'] ?? element.RootNote?.['@_Value'] ?? '-1',
+    10
   );
 
   // Handle both newer format (numeric scale) and older format (string scale)
@@ -57,8 +56,8 @@ function parseScaleElement(element: any): Scale | null {
 
   if (typeof nameValue === 'string') {
     // Live 11 uses string names like "Minor", "Major", etc.
-    const scaleIndex = SCALE_NAMES.findIndex(name =>
-      name.toLowerCase() === nameValue.toLowerCase()
+    const scaleIndex = SCALE_NAMES.findIndex(
+      name => name.toLowerCase() === nameValue.toLowerCase()
     );
     scaleValue = scaleIndex >= 0 ? scaleIndex : -1;
   } else {
