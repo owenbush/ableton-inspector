@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, Loader2, AlertCircle, CheckCircle, Settings, Plus, X } from 'lucide-react';
 // Import from browser entry point
-import { Inspector } from '@owenbush/ableton-inspector-core/dist/src/browser.js';
+import { Inspector } from '@owenbush/ableton-inspector-core/browser';
 import type { AbletonProject } from '@owenbush/ableton-inspector-core';
 import type { ExtractOptions, ProcessingResult } from '../lib/types';
 

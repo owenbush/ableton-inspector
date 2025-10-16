@@ -16,12 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Path mapping */
-    "baseUrl": ".",
-    "paths": {
-      "@owenbush/ableton-inspector-core/dist/src/browser.js": ["../core/dist/src/browser.d.ts"]
-    },
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

@@ -84,7 +84,7 @@ export function extractLocators(xmlRoot: any): LocatorsData {
 
 function formatDuration(duration: number): string {
   const bars = Math.floor(duration / 4);
-  const beats = duration % 4;
+  const beats = Math.round((duration % 4) * 100) / 100; // Round to 2 decimal places
 
   if (beats === 0) {
     return `${bars} bar${bars !== 1 ? 's' : ''}`;
