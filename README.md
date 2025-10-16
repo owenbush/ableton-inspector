@@ -34,6 +34,7 @@ The web app includes optimized Open Graph and Twitter Card metadata for beautifu
 ## Compatibility
 
 **✅ Fully tested with:**
+
 - **Ableton Live 11** - Complete compatibility with all features
 - **Ableton Live 12** - Full support for latest version
 
