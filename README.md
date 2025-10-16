@@ -2,6 +2,8 @@
 
 Extract comprehensive information from Ableton Live Set (.als) files including tempo, time signature, musical key, samples, song structure, and track organization.
 
+**✅ Tested and compatible with Ableton Live 11 and 12 projects**
+
 [![npm version](https://img.shields.io/npm/v/@owenbush/ableton-inspector.svg)](https://www.npmjs.com/package/@owenbush/ableton-inspector)
 [![CI](https://github.com/owenbush/ableton-inspector/workflows/CI/badge.svg)](https://github.com/owenbush/ableton-inspector/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -28,6 +30,14 @@ The web app includes optimized Open Graph and Twitter Card metadata for beautifu
 - 📦 **JSON Export** - Export data in JSON format
 - 🔧 **Custom Splice Paths** - Support for custom Splice folder locations
 - 🌍 **Cross-Platform** - Works on Windows, macOS, and Linux
+
+## Compatibility
+
+**✅ Fully tested with:**
+- **Ableton Live 11** - Complete compatibility with all features
+- **Ableton Live 12** - Full support for latest version
+
+The tool automatically detects and handles differences between Live versions, ensuring accurate extraction for Live 11 and 12 projects.
 
 ## Quick Start
 

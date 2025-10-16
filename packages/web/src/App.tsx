@@ -36,7 +36,7 @@ function App() {
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            Extract tempo, scale, and sample information from your Ableton Live projects
+            Extract tempo, scale, and sample information from your Ableton Live 11 & 12 projects
             instantly.
           </p>
 
@@ -141,6 +141,47 @@ function App() {
                 quickly understanding any .als file's contents and structure.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Compatibility Section */}
+      <section className="px-4 py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">
+            ✅ Compatible with Ableton Live 11 & 12
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-800">
+              <div className="text-4xl mb-4">🎵</div>
+              <h3 className="text-xl font-semibold mb-3 text-blue-900 dark:text-blue-100">
+                Live 11 Projects
+              </h3>
+              <p className="text-blue-700 dark:text-blue-300">
+                Fully tested and compatible with all Live 11 features including tempo automation,
+                scale detection, and arrangement markers.
+              </p>
+            </div>
+
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-8 border border-purple-200 dark:border-purple-800">
+              <div className="text-4xl mb-4">🎶</div>
+              <h3 className="text-xl font-semibold mb-3 text-purple-900 dark:text-purple-100">
+                Live 12 Projects
+              </h3>
+              <p className="text-purple-700 dark:text-purple-300">
+                Complete support for the latest Live 12 features with enhanced extraction
+                capabilities and improved accuracy.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+            <p className="text-gray-700 dark:text-gray-300 text-lg">
+              <strong>Automatic version detection</strong> - The tool automatically detects and handles
+              differences between Live versions, ensuring accurate extraction regardless of when
+              your project was created.
+            </p>
           </div>
         </div>
       </section>
