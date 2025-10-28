@@ -232,6 +232,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                   </p>
                   <button
                     onClick={() => {
+                      if (!data.samples) return;
                       const samplesToCopy = options.showAllSamples
                         ? data.samples.samples
                         : data.samples.samples.filter((s: Sample) => s.isSplice);
