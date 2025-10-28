@@ -3,6 +3,9 @@ import { Download, Copy, Music, Hash, Disc, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { ProcessingResult } from '../lib/types';
 import type { TimeSignatureChange, Sample, Track, Locator } from '@owenbush/ableton-inspector-core';
+import { copySampleList } from '../lib/clipboard';
+import { useToast } from '../hooks/useToast';
+import { Toast } from './Toast';
 
 interface ResultsDisplayProps {
   result: ProcessingResult;
@@ -13,6 +16,7 @@ interface ResultsDisplayProps {
 
 export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
   const [copied, setCopied] = useState(false);
+  const { toast, showSuccess, showError, hideToast } = useToast();
 
   if (!result.success || !result.data) {
     return null;
@@ -34,6 +38,15 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
     a.download = `${data.file.replace('.als', '')}-analysis.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleCopySamples = async (samples: Sample[]) => {
+    const result = await copySampleList(samples);
+    if (result.success) {
+      showSuccess(`Copied ${samples.length} sample names to clipboard!`);
+    } else {
+      showError(`Failed to copy: ${result.error}`);
+    }
   };
 
   return (
@@ -212,10 +225,25 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
 
             {/* Sample list */}
             {(options.showAllSamples || data.samples.spliceSamples > 0) && (
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                  {options.showAllSamples ? 'All Samples:' : 'Splice Samples:'}
-                </p>
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {options.showAllSamples ? 'All Samples:' : 'Splice Samples:'}
+                  </p>
+                  <button
+                    onClick={() => {
+                      const samplesToCopy = options.showAllSamples
+                        ? data.samples.samples
+                        : data.samples.samples.filter((s: Sample) => s.isSplice);
+                      handleCopySamples(samplesToCopy);
+                    }}
+                    className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+                  >
+                    <Copy className="w-4 h-4" />
+                    Copy List
+                  </button>
+                </div>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
                 {(options.showAllSamples
                   ? data.samples.samples
                   : data.samples.samples.filter((s: Sample) => s.isSplice)
@@ -244,6 +272,7 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
                     </div>
                   </div>
                 ))}
+                </div>
               </div>
             )}
           </motion.div>
@@ -385,6 +414,14 @@ export function ResultsDisplay({ result, options }: ResultsDisplayProps) {
           </p>
         </div>
       )}
+
+      {/* Toast notification */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        visible={toast.visible}
+        onClose={hideToast}
+      />
     </motion.div>
   );
 }

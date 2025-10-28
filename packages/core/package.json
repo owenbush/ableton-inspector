@@ -1,6 +1,6 @@
 {
   "name": "@owenbush/ableton-inspector-core",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "type": "module",
   "description": "Core library for extracting information from Ableton Live Set files",
   "main": "dist/src/index.js",
