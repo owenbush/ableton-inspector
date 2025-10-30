@@ -13,10 +13,7 @@ declare global {
 /**
  * Send a custom event to Google Analytics via GTM dataLayer.
  */
-export function trackEvent(
-  eventName: string,
-  eventParams?: Record<string, unknown>
-): void {
+export function trackEvent(eventName: string, eventParams?: Record<string, unknown>): void {
   if (typeof window === 'undefined') return;
 
   // Initialize dataLayer if it doesn't exist.
@@ -81,13 +78,9 @@ export function trackFileAnalysis(params: {
 /**
  * Track analysis errors.
  */
-export function trackAnalysisError(
-  errorMessage: string,
-  fileSize?: number
-): void {
+export function trackAnalysisError(errorMessage: string, fileSize?: number): void {
   trackEvent('analysis_error', {
     error_message: errorMessage,
     file_size_mb: fileSize ? (fileSize / 1024 / 1024).toFixed(2) : undefined,
   });
 }
-

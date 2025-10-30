@@ -39,7 +39,7 @@ export const copyToClipboard = async (text: string): Promise<ClipboardResult> =>
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred'
+      error: err instanceof Error ? err.message : 'Unknown error occurred',
     };
   }
 };
@@ -47,7 +47,9 @@ export const copyToClipboard = async (text: string): Promise<ClipboardResult> =>
 /**
  * Copy sample names as a simple text list (one per line)
  */
-export const copySampleList = async (samples: Array<{ filename: string }>): Promise<ClipboardResult> => {
+export const copySampleList = async (
+  samples: Array<{ filename: string }>
+): Promise<ClipboardResult> => {
   if (samples.length === 0) {
     return { success: false, error: 'No samples to copy' };
   }

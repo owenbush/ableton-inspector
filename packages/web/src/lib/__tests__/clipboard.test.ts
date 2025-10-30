@@ -85,7 +85,7 @@ describe('clipboard', () => {
       const samples = [
         { filename: 'kick.wav' },
         { filename: 'snare.wav' },
-        { filename: 'hihat.wav' }
+        { filename: 'hihat.wav' },
       ];
 
       const result = await copySampleList(samples);
@@ -124,6 +124,3 @@ describe('clipboard', () => {
     });
   });
 });
-
-
-
