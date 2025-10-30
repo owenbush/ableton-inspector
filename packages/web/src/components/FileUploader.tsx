@@ -5,6 +5,7 @@ import { Upload, Loader2, AlertCircle, CheckCircle, Settings, Plus, X } from 'lu
 import { Inspector } from '@owenbush/ableton-inspector-core/browser';
 import type { AbletonProject } from '@owenbush/ableton-inspector-core';
 import type { ExtractOptions, ProcessingResult } from '../lib/types';
+import { trackFileUpload, trackFileAnalysis, trackAnalysisError } from '../lib/analytics';
 
 interface FileUploaderProps {
   onResult: (result: ProcessingResult) => void;
@@ -115,6 +116,21 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
         },
       });
 
+      // Track successful analysis.
+      trackFileAnalysis({
+        fileSize: selectedFile.size,
+        processingTime,
+        extractTempo: options.tempo,
+        extractScale: options.scale,
+        extractSamples: options.samples,
+        extractLocators: options.locators,
+        extractTimeSignature: options.timeSignature,
+        extractTrackTypes: options.trackTypes,
+        spliceOnly: options.spliceOnly,
+        showAllSamples: options.showAllSamples,
+        hasCustomPaths: Boolean(options.customSplicePaths?.length),
+      });
+
       // Show success state and trigger callback
       setSuccess(true);
       onSuccess?.();
@@ -124,6 +140,10 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to process file';
       setError(errorMessage);
+
+      // Track analysis error.
+      trackAnalysisError(errorMessage, selectedFile.size);
+
       onResult({
         success: false,
         error: errorMessage,
@@ -140,6 +160,9 @@ export function FileUploader({ onResult, onSuccess, onOptionsChange }: FileUploa
         setSelectedFile(file);
         setError(null);
         setSuccess(false);
+
+        // Track file upload/selection.
+        trackFileUpload(file.size);
       }
     },
     []
