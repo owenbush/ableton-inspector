@@ -10,6 +10,7 @@ export interface AbletonProject {
   locators?: LocatorsData;
   timeSignature?: TimeSignatureData;
   trackTypes?: TrackTypesData;
+  devices?: DevicesData;
 }
 
 export interface TempoInfo {
@@ -103,4 +104,30 @@ export interface Track {
   userDefinedName: string;
   color: number;
   annotation: string;
+}
+
+export interface DeviceParameter {
+  name: string;
+  value: number | string;
+}
+
+export interface DeviceInfo {
+  id: number;
+  name: string;
+  type: 'native' | 'vst' | 'au' | 'max' | 'unknown';
+  category: string;
+  manufacturer?: string;
+  isExpanded: boolean;
+  parameters: DeviceParameter[];
+}
+
+export interface DevicesData {
+  devices: DeviceInfo[];
+  summary: {
+    native: number;
+    vst: number;
+    au: number;
+    max: number;
+    total: number;
+  };
 }

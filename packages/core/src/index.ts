@@ -23,6 +23,7 @@ export { extractSamples } from './extractors/samples.js';
 export { extractLocators } from './extractors/locators.js';
 export { extractTimeSignature } from './extractors/time-signature.js';
 export { extractTrackTypes } from './extractors/track-types.js';
+export { extractDevices } from './extractors/devices.js';
 
 /**
  * Main Inspector class for convenient usage.
@@ -36,6 +37,7 @@ import { extractSamples } from './extractors/samples.js';
 import { extractLocators } from './extractors/locators.js';
 import { extractTimeSignature } from './extractors/time-signature.js';
 import { extractTrackTypes } from './extractors/track-types.js';
+import { extractDevices } from './extractors/devices.js';
 import type { AbletonProject, SampleOptions } from './types/index.js';
 
 export class Inspector {
@@ -87,6 +89,7 @@ export class Inspector {
       locators: this.extractLocators(),
       timeSignature: this.extractTimeSignature(),
       trackTypes: this.extractTrackTypes(),
+      devices: this.extractDevices(),
     };
   }
 
@@ -132,5 +135,12 @@ export class Inspector {
    */
   extractTrackTypes() {
     return extractTrackTypes(this.xmlRoot);
+  }
+
+  /**
+   * Extract device and parameter information.
+   */
+  extractDevices() {
+    return extractDevices(this.xmlRoot);
   }
 }

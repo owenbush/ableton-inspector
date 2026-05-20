@@ -1,5 +1,10 @@
 import { getNestedValue } from '../utils/xml-parser.js';
 
+export interface DeviceParameter {
+  name: string;
+  value: number | string;
+}
+
 export interface Device {
   id: number;
   name: string;
@@ -7,6 +12,7 @@ export interface Device {
   category: string;
   manufacturer?: string;
   isExpanded: boolean;
+  parameters: DeviceParameter[];
 }
 
 export interface DevicesData {
@@ -23,14 +29,12 @@ export interface DevicesData {
 export function extractDevices(xmlRoot: any): DevicesData {
   const devices: Device[] = [];
 
-  // Search for devices in all tracks
-  const searchForDevices = (obj: any, path: string = '') => {
+  const searchForDevices = (obj: any) => {
     if (typeof obj !== 'object' || obj === null) return;
 
     if (Array.isArray(obj)) {
-      obj.forEach((item, index) => searchForDevices(item, `${path}[${index}]`));
+      obj.forEach(item => searchForDevices(item));
     } else {
-      // Check for various device types
       const deviceTypes = [
         'PluginDevice',
         'MidiDevice',
@@ -60,10 +64,9 @@ export function extractDevices(xmlRoot: any): DevicesData {
         }
       }
 
-      // Recursively search nested objects
       Object.keys(obj).forEach(key => {
         if (typeof obj[key] === 'object' && !deviceTypes.includes(key)) {
-          searchForDevices(obj[key], `${path}.${key}`);
+          searchForDevices(obj[key]);
         }
       });
     }
@@ -71,13 +74,11 @@ export function extractDevices(xmlRoot: any): DevicesData {
 
   searchForDevices(xmlRoot);
 
-  // Remove duplicates based on ID and name
   const uniqueDevices = devices.filter(
     (device, index, self) =>
       index === self.findIndex(d => d.id === device.id && d.name === device.name)
   );
 
-  // Calculate summary
   const summary = {
     native: uniqueDevices.filter(d => d.type === 'native').length,
     vst: uniqueDevices.filter(d => d.type === 'vst').length,
@@ -92,17 +93,41 @@ export function extractDevices(xmlRoot: any): DevicesData {
   };
 }
 
+function extractDeviceParameters(device: any): DeviceParameter[] {
+  const params: DeviceParameter[] = [];
+
+  const walk = (obj: any, parentKey: string) => {
+    if (typeof obj !== 'object' || obj === null) return;
+
+    if (obj.Manual && obj.Manual['@_Value'] !== undefined) {
+      const value = obj.Manual['@_Value'];
+      params.push({ name: parentKey, value });
+      return;
+    }
+
+    if (Array.isArray(obj)) {
+      obj.forEach((item, i) => walk(item, `${parentKey}[${i}]`));
+    } else {
+      for (const key of Object.keys(obj)) {
+        if (key.startsWith('@_')) continue;
+        walk(obj[key], parentKey ? `${parentKey}.${key}` : key);
+      }
+    }
+  };
+
+  walk(device, '');
+  return params;
+}
+
 function extractDeviceInfo(device: any, deviceType: string): Device | null {
   const id = Number(device['@_Id']);
   const isExpanded = Boolean(getNestedValue(device, 'IsExpanded.@_Value'));
 
-  // Try to get device name from various possible locations
   let name = '';
   let type: Device['type'] = 'unknown';
   let category = '';
   let manufacturer = '';
 
-  // Check for VST plugin info
   const vstInfo = getNestedValue(device, 'PluginDesc.VstPluginInfo');
   if (vstInfo) {
     name = getNestedValue(vstInfo, 'PlugName.@_Value') || '';
@@ -111,7 +136,6 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     category = 'VST Plugin';
   }
 
-  // Check for AU plugin info
   const auInfo = getNestedValue(device, 'PluginDesc.AuPluginInfo');
   if (auInfo) {
     name = getNestedValue(auInfo, 'PlugName.@_Value') || '';
@@ -120,7 +144,6 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     category = 'AU Plugin';
   }
 
-  // Check for Max device info
   const maxInfo = getNestedValue(device, 'PluginDesc.MaxDeviceInfo');
   if (maxInfo) {
     name = getNestedValue(maxInfo, 'PlugName.@_Value') || '';
@@ -128,7 +151,6 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     category = 'Max Device';
   }
 
-  // Check for native Ableton device info
   if (!name) {
     const deviceName = getNestedValue(device, 'DeviceName.@_Value');
     if (deviceName) {
@@ -138,9 +160,7 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     }
   }
 
-  // Check for device name in various other locations
   if (!name) {
-    // Look for Name elements with Value attributes in nested structures
     const namePaths = [
       'Name.@_Value',
       'DeviceName.@_Value',
@@ -161,19 +181,13 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     }
   }
 
-  // If still no name, try to find it in the device's nested structure
   if (!name || name === deviceType) {
-    // Look for any Name element with a meaningful value in the entire device tree
     const findNameInDevice = (obj: any, depth = 0): string | null => {
-      if (depth > 10) return null; // Prevent infinite recursion
-
+      if (depth > 10) return null;
       if (obj && typeof obj === 'object') {
-        // Check if this object has a Name with Value
         if (obj.Name && obj.Name['@_Value'] && obj.Name['@_Value'] !== deviceType) {
           return obj.Name['@_Value'];
         }
-
-        // Recursively search in nested objects
         for (const key in obj) {
           if (obj[key] && typeof obj[key] === 'object') {
             const found = findNameInDevice(obj[key], depth + 1);
@@ -192,12 +206,13 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     }
   }
 
-  // Fallback to device type if no name found
   if (!name) {
     name = deviceType;
     type = 'native';
     category = getDeviceCategory(deviceType);
   }
+
+  const parameters = extractDeviceParameters(device);
 
   return {
     id,
@@ -206,6 +221,7 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
     category,
     manufacturer: manufacturer || undefined,
     isExpanded,
+    parameters,
   };
 }
 
