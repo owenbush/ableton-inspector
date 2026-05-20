@@ -109,8 +109,12 @@ function extractDeviceParameters(device: any): DeviceParameter[] {
   }
 
   const skipKeys = new Set([
-    'Branches', 'ReturnBranches', 'Chains', 'DeviceChain',
-    'SignalModulations', 'MacroSnapshots',
+    'Branches',
+    'ReturnBranches',
+    'Chains',
+    'DeviceChain',
+    'SignalModulations',
+    'MacroSnapshots',
   ]);
 
   const walk = (obj: any, parentKey: string) => {
