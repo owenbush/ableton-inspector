@@ -5,12 +5,12 @@ on:
     types: [published]
 
 jobs:
-  publish:
-    name: Publish to NPM
+  publish-core:
+    name: Publish @owenbush/ableton-inspector-core
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for NPM provenance
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -32,20 +32,67 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Publish @owenbush/ableton-inspector-core
+      - name: Check if version changed
+        id: check
+        run: |
+          LOCAL=$(node -p "require('./packages/core/package.json').version")
+          PUBLISHED=$(npm view @owenbush/ableton-inspector-core version 2>/dev/null || echo "0.0.0")
+          echo "local=$LOCAL" >> "$GITHUB_OUTPUT"
+          echo "published=$PUBLISHED" >> "$GITHUB_OUTPUT"
+          if [ "$LOCAL" != "$PUBLISHED" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
         run: npm publish --workspace=@owenbush/ableton-inspector-core --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @owenbush/ableton-inspector
+      - name: Skip (already published)
+        if: steps.check.outputs.changed != 'true'
+        run: echo "⏭️ @owenbush/ableton-inspector-core@${{ steps.check.outputs.local }} already published"
+
+  publish-cli:
+    name: Publish @owenbush/ableton-inspector
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check if version changed
+        id: check
+        run: |
+          LOCAL=$(node -p "require('./packages/cli/package.json').version")
+          PUBLISHED=$(npm view @owenbush/ableton-inspector version 2>/dev/null || echo "0.0.0")
+          echo "local=$LOCAL" >> "$GITHUB_OUTPUT"
+          echo "published=$PUBLISHED" >> "$GITHUB_OUTPUT"
+          if [ "$LOCAL" != "$PUBLISHED" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Publish
+        if: steps.check.outputs.changed == 'true'
         run: npm publish --workspace=@owenbush/ableton-inspector --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Notify on success
-        if: success()
-        run: |
-          echo "✅ Successfully published packages to NPM"
-          echo "Core: https://www.npmjs.com/package/@owenbush/ableton-inspector-core"
-          echo "CLI: https://www.npmjs.com/package/@owenbush/ableton-inspector"
-
+      - name: Skip (already published)
+        if: steps.check.outputs.changed != 'true'
+        run: echo "⏭️ @owenbush/ableton-inspector@${{ steps.check.outputs.local }} already published"
