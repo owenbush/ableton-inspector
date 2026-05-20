@@ -44,6 +44,7 @@ export function extractDevices(xmlRoot: any): DevicesData {
         'MidiEffectRackDevice',
         'InstrumentGroupDevice',
         'InstrumentRackDevice',
+        'DrumGroupDevice',
         'MaxAudioEffectDevice',
         'MaxMidiEffectDevice',
         'MaxInstrumentDevice',
@@ -54,7 +55,7 @@ export function extractDevices(xmlRoot: any): DevicesData {
           const deviceArray = Array.isArray(obj[deviceType]) ? obj[deviceType] : [obj[deviceType]];
 
           for (const device of deviceArray) {
-            if (device && device['@_Id']) {
+            if (device && device['@_Id'] !== undefined) {
               const deviceInfo = extractDeviceInfo(device, deviceType);
               if (deviceInfo) {
                 devices.push(deviceInfo);
@@ -74,27 +75,43 @@ export function extractDevices(xmlRoot: any): DevicesData {
 
   searchForDevices(xmlRoot);
 
-  const uniqueDevices = devices.filter(
-    (device, index, self) =>
-      index === self.findIndex(d => d.id === device.id && d.name === device.name)
-  );
+  // Assign a stable discovery index so devices with the same local Id
+  // (e.g. drum racks on different tracks) remain distinguishable.
+  for (let i = 0; i < devices.length; i++) {
+    devices[i].id = i;
+  }
 
   const summary = {
-    native: uniqueDevices.filter(d => d.type === 'native').length,
-    vst: uniqueDevices.filter(d => d.type === 'vst').length,
-    au: uniqueDevices.filter(d => d.type === 'au').length,
-    max: uniqueDevices.filter(d => d.type === 'max').length,
-    total: uniqueDevices.length,
+    native: devices.filter(d => d.type === 'native').length,
+    vst: devices.filter(d => d.type === 'vst').length,
+    au: devices.filter(d => d.type === 'au').length,
+    max: devices.filter(d => d.type === 'max').length,
+    total: devices.length,
   };
 
   return {
-    devices: uniqueDevices,
+    devices,
     summary,
   };
 }
 
 function extractDeviceParameters(device: any): DeviceParameter[] {
   const params: DeviceParameter[] = [];
+
+  for (let i = 0; i <= 15; i++) {
+    const key = `MacroControls.${i}`;
+    const macro = device[key];
+    if (macro && macro.Manual && macro.Manual['@_Value'] !== undefined) {
+      const displayName = device[`MacroDisplayNames.${i}`]?.['@_Value'];
+      const name = displayName || `Macro ${i + 1}`;
+      params.push({ name, value: macro.Manual['@_Value'] });
+    }
+  }
+
+  const skipKeys = new Set([
+    'Branches', 'ReturnBranches', 'Chains', 'DeviceChain',
+    'SignalModulations', 'MacroSnapshots',
+  ]);
 
   const walk = (obj: any, parentKey: string) => {
     if (typeof obj !== 'object' || obj === null) return;
@@ -110,6 +127,8 @@ function extractDeviceParameters(device: any): DeviceParameter[] {
     } else {
       for (const key of Object.keys(obj)) {
         if (key.startsWith('@_')) continue;
+        if (key.startsWith('MacroControls.')) continue;
+        if (skipKeys.has(key)) continue;
         walk(obj[key], parentKey ? `${parentKey}.${key}` : key);
       }
     }
@@ -162,6 +181,7 @@ function extractDeviceInfo(device: any, deviceType: string): Device | null {
 
   if (!name) {
     const namePaths = [
+      'UserName.@_Value',
       'Name.@_Value',
       'DeviceName.@_Value',
       'PlugName.@_Value',
@@ -235,6 +255,7 @@ function getDeviceCategory(deviceType: string): string {
     MidiEffectRackDevice: 'MIDI Effect Rack',
     InstrumentGroupDevice: 'Instrument Group',
     InstrumentRackDevice: 'Instrument Rack',
+    DrumGroupDevice: 'Drum Rack',
     MaxAudioEffectDevice: 'Max Audio Effect',
     MaxMidiEffectDevice: 'Max MIDI Effect',
     MaxInstrumentDevice: 'Max Instrument',
